@@ -1,0 +1,3 @@
+[submodule "foxstd"]
+	path = foxstd
+	url = https://github.com/FoundedPlains/foxstd.git
