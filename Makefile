@@ -5,6 +5,7 @@ CFLAGS ?= -Wall -g -O2
 
 all:
 	@echo "CONFIG_FOXAUTH=y" > foxstd/.config
+	@echo "CONFIG_FOXCONFIG=y" >> foxstd/.config
 	$(MAKE) -C foxstd all
 	cp foxstd/foxstd.h .
 	cp foxstd/libfoxstd.a .
@@ -19,9 +20,10 @@ rootable:
 
 install: rootable
 	sudo cp -p main /usr/bin/foxdo
+	sudo cp defconf.foxconfig /etc/foxdo.foxconfig
 
 clean:
 	$(MAKE) -C foxstd clean
 	$(MAKE) -C src clean
-	rm main
+	rm -f main
 	rm foxstd.h libfoxstd.a

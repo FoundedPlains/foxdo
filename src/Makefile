@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -O2 -Wall
-OBJ = rootize.o launch.o
+CFLAGS = -O2 -Wall -D_GNU_SOURCE
+OBJ = rootize.o launch.o timeout.o
 
 .DEFAULT_GOAL = all
 
