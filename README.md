@@ -11,10 +11,12 @@ Installing
 git clone https://github.com/FoundedPlains/foxdo.git --recurse-submodules
 cd foxdo
 make
+# make sure you run make install as root
 make install
 
 Uninstalling
 
+# make sure you run make uninstall as root
 make uninstall
 
 Configuring

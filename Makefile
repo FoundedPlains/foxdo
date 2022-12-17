@@ -29,18 +29,18 @@ all:
 	$(CC) $(CFLAGS) -L. -lcrypt  main.c -o main -lfoxstd -lfoxdo
 
 rootable:
-	sudo chown root:root ./main
-	sudo chmod ugo= ./main
-	sudo chmod +s ./main
-	sudo chmod u+rwx,g=rx,o=rx ./main
+	chown root:root ./main
+	chmod ugo= ./main
+	chmod +s ./main
+	chmod u+rwx,g=rx,o=rx ./main
 
 install: rootable
-	sudo cp -p main /usr/bin/foxdo
-	sudo cp defconf.foxconfig /etc/foxdo.foxconfig
+	cp -p main /usr/bin/foxdo
+	cp defconf.foxconfig /etc/foxdo.foxconfig
 
 uninstall:
-	sudo rm /usr/bin/foxdo
-	sudo rm /etc/foxdo.foxconfig
+	rm /usr/bin/foxdo
+	rm /etc/foxdo.foxconfig
 
 clean:
 	$(MAKE) -C foxstd clean
