@@ -38,6 +38,10 @@ install: rootable
 	sudo cp -p main /usr/bin/foxdo
 	sudo cp defconf.foxconfig /etc/foxdo.foxconfig
 
+uninstall:
+	sudo rm /usr/bin/foxdo
+	sudo rm /etc/foxdo.foxconfig
+
 clean:
 	$(MAKE) -C foxstd clean
 	$(MAKE) -C src clean
