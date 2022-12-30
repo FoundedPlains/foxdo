@@ -26,7 +26,7 @@ all:
 	cp foxstd/foxstd.h .
 	cp foxstd/libfoxstd.a .
 	$(MAKE) -C src all
-	$(CC) $(CFLAGS) -L. -lcrypt  main.c -o main -lfoxstd -lfoxdo
+	$(CC) $(CFLAGS) main.c -o main -L. -lfoxdo -lcrypt -lfoxstd
 
 rootable:
 	chown root:root ./main

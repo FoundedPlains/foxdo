@@ -16,12 +16,12 @@
 
 CC = gcc
 CFLAGS = -O2 -Wall -D_GNU_SOURCE
-OBJ = rootize.o launch.o timeout.o
+OBJ = rootize.o launch.o timeout.o config_parser.o check.o
 
 .DEFAULT_GOAL = all
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -lfoxstd -lcrypt -o $@
 
 all: $(OBJ)
 	ar rcs ../libfoxdo.a $(OBJ)

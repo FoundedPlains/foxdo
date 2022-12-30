@@ -20,6 +20,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "src/rootize.h"
 #include "src/launch.h"
 #include "src/timeout.h"
+#include "src/config_parser.h"
+#include "src/check.h"
 #include "config.h"
 
 #include <stdio.h>
@@ -27,32 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <string.h>
 #include <time.h>
 #include <errno.h>
-#include <linux/limits.h>
-#include <grp.h>
 #include <unistd.h>
-#include <termios.h>
-
-typedef struct {
-    StringArray users;
-    StringArray groups;
-} Allow;
-
-typedef struct {
-    Number seconds;
-    Number minutes;
-    Number hours;
-} Timeout;
-
-typedef struct {
-    Allow a;
-    Timeout t;
-} Config;
-
-char *get_login()
-{
-    char *login = getenv("USER");
-    return login;
-}
 
 int main(int argc, char **argv)
 {
@@ -68,44 +45,12 @@ int main(int argc, char **argv)
         return ENOENT;
     }
 
-    Dict dict = newDict();
+    Config config = parseConfig();
 
-    Config config;
+    short has_group = check_groups(config);
+    short has_user = check_user(config);
 
-    config.t.hours = 0;
-    config.t.minutes = 0;
-    config.t.seconds = 0;
-
-    assingDict(&dict, "allow.users", StringArray_type, &config.a.users);
-    assingDict(&dict, "allow.groups", StringArray_type, &config.a.groups);
-    assingDict(&dict, "timeout.seconds", Number_type, &config.t.seconds);
-    assingDict(&dict, "timeout.minutes", Number_type, &config.t.minutes);
-    assingDict(&dict, "timeout.hours", Number_type, &config.t.hours);
-
-    parse("/etc/foxdo.foxconfig", &dict);
-
-    short has_group = 0;
-    short has_user = 0;
-
-    __gid_t user_groups[NGROUPS_MAX];
-
-    int size = getgroups(NGROUPS_MAX, user_groups);
-    for (int i = 0; i < size; i++) {
-        struct group *grp = getgrgid(user_groups[i]);
-        size_t len = strlen(grp->gr_name);
-        for (int j = 0; j < config.a.groups.length; j++) {
-            if (!strncmp(grp->gr_name, config.a.groups.data[j], len))
-                has_group = 1;
-        }
-    }
-
-    char *login = get_login();
-
-    int name_len = strlen(login);
-    for (int i = 0; i < config.a.users.length; i++) {
-        if (!strncmp(login, config.a.users.data[i], name_len))
-            has_user = 1;
-    }
+    char *login = getenv("USER");  
 
     if (!(has_group || has_user)) {
         printf("You are not allowed to use foxdo!\n");
